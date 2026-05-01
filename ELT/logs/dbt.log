@@ -1,0 +1,40 @@
+{"data":{"log_version":3,"version":"=2.0.0-preview.173"},"info":{"category":"","code":"A001","extra":{},"invocation_id":"019de36b-aaa8-7dd1-9f0a-f195fe627ef2","level":"info","msg":"Running with dbt-fusion=2.0.0-preview.173","name":"MainReportVersion","pid":18712,"thread":"tokio-rt-worker","ts":"2026-05-01T12:02:57.325418Z"}}
+{"data":{"args":{"debug":"false","invocation_command":"C:\\Users\\sanak\\.local\\bin\\dbt.exe license info --json --log-format json","log_format":"json","quiet":"false","write_json":"true"}},"info":{"category":"","code":"A002","extra":{},"invocation_id":"019de36b-aaa8-7dd1-9f0a-f195fe627ef2","level":"debug","msg":"running dbt-fusion with argumets {\"command\":\"license\",\"vars\":\"{}\",\"limit\":\"10\",\"debug\":false,\"log_format\":\"json\",\"quiet\":false,\"write_json\":true,\"write_catalog\":false}","name":"MainReportArgs","pid":18712,"thread":"tokio-rt-worker","ts":"2026-05-01T12:02:57.325482Z"}}
+{"data":{},"info":{"category":"","code":"","extra":{},"invocation_id":"019de36b-aaa8-7dd1-9f0a-f195fe627ef2","level":"debug","msg":"No active cloud project configured, skipping remote license","name":"Generic","pid":18712,"thread":"tokio-rt-worker","ts":"2026-05-01T12:02:57.329824Z"}}
+{"data":{"columns":[],"is_inline":true,"node_name":"license_info","output_format":"json","preview":"{\n  \"status\": \"not_found\",\n  \"licensing_enabled\": true\n}","unique_id":"license.info"},"info":{"category":"","code":"Q041","extra":{},"invocation_id":"019de36b-aaa8-7dd1-9f0a-f195fe627ef2","level":"info","msg":"{\n  \"status\": \"not_found\",\n  \"licensing_enabled\": true\n}","name":"ShowNode","pid":18712,"thread":"tokio-rt-worker","ts":"2026-05-01T12:02:57.330814Z"}}
+{"data":{"completed_at":"2026-05-01T12:02:57.577110Z","elapsed":0.25209560990333557,"success":true},"info":{"category":"","code":"Q039","extra":{},"invocation_id":"019de36b-aaa8-7dd1-9f0a-f195fe627ef2","level":"info","msg":"\n==================== Execution Summary =====================\nFinished 'license' successfully [252ms]","name":"CommandCompleted","pid":18712,"thread":"tokio-rt-worker","ts":"2026-05-01T12:02:57.577261Z"}}
+{"data":{"log_version":3,"version":"=2.0.0-preview.173"},"info":{"category":"","code":"A001","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"info","msg":"Running with dbt-fusion=2.0.0-preview.173","name":"MainReportVersion","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:32.294740Z"}}
+{"data":{"args":{"debug":"false","invocation_command":"C:\\Users\\sanak\\.local\\bin\\dbt.exe license info --json --log-format json","log_format":"json","quiet":"false","write_json":"true"}},"info":{"category":"","code":"A002","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"debug","msg":"running dbt-fusion with argumets {\"command\":\"license\",\"vars\":\"{}\",\"limit\":\"10\",\"debug\":false,\"log_format\":\"json\",\"quiet\":false,\"write_json\":true,\"write_catalog\":false}","name":"MainReportArgs","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:32.294776Z"}}
+{"data":{},"info":{"category":"","code":"","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"debug","msg":"Requesting license from https://vf863.us1.dbt.com/api/private/accounts/70471823557364/feature-licenses/ with 1 key IDs: [\"fusion-prod-2025-11-20\"]","name":"Generic","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:32.321476Z"}}
+{"data":{},"info":{"category":"","code":"","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"debug","msg":"License successfully retrieved from remote","name":"Generic","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:36.087049Z"}}
+{"data":{},"info":{"category":"","code":"","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"info","msg":"License loaded from remote server vf863.us1.dbt.com","name":"Generic","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:36.087435Z"}}
+{"data":{},"info":{"category":"","code":"","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"debug","msg":"License cached to file for account 70471823557364","name":"Generic","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:36.089261Z"}}
+{"data":{"columns":[],"is_inline":true,"node_name":"license_info","output_format":"json","preview":"{\n  \"status\": \"valid\",\n  \"licensing_enabled\": true,\n  \"features\": []\n}","unique_id":"license.info"},"info":{"category":"","code":"Q041","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"info","msg":"{\n  \"status\": \"valid\",\n  \"licensing_enabled\": true,\n  \"features\": []\n}","name":"ShowNode","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:36.089352Z"}}
+{"data":{"completed_at":"2026-05-01T12:19:36.126062Z","elapsed":3.831664562225342,"success":true},"info":{"category":"","code":"Q039","extra":{},"invocation_id":"019de37a-d944-78b2-b52f-67d7ca7a19d5","level":"info","msg":"\n==================== Execution Summary =====================\nFinished 'license' successfully [3.8s]","name":"CommandCompleted","pid":4116,"thread":"tokio-rt-worker","ts":"2026-05-01T12:19:36.126195Z"}}
+[0m15:23:55.285415 [debug] [MainThread]: Got an exception trying to initialize tracking
+
+
+============================== 15:23:55.417316 | b95d98ad-b79f-4f90-a6f5-5be6040cd35c ==============================
+[0m15:23:55.417316 [info ] [MainThread]: Running with dbt=1.11.8
+[0m15:23:55.418204 [debug] [MainThread]: running dbt with arguments {'static_parser': 'True', 'no_print': 'None', 'version_check': 'True', 'target_path': 'None', 'warn_error_options': 'WarnErrorOptionsV2(error=[], warn=[], silence=[])', 'printer_width': '80', 'write_json': 'True', 'introspect': 'True', 'log_cache_events': 'False', 'empty': 'None', 'cache_selected_only': 'False', 'fail_fast': 'False', 'debug': 'False', 'log_format': 'default', 'partial_parse': 'True', 'send_anonymous_usage_stats': 'True', 'quiet': 'False', 'warn_error': 'None', 'profiles_dir': 'C:\\Users\\sanak\\.dbt', 'indirect_selection': 'eager', 'invocation_command': 'dbt init', 'use_colors': 'True', 'use_experimental_parser': 'False', 'log_path': 'logs'}
+[0m15:24:36.879278 [debug] [MainThread]: Starter project path: C:\Users\sanak\AppData\Local\Programs\Python\Python313\Lib\site-packages\dbt\include\starter_project
+[0m15:24:36.904467 [info ] [MainThread]: 
+Your new dbt project "custom_postgres" was created!
+
+For more information on how to configure the profiles.yml file,
+please consult the dbt documentation here:
+
+  https://docs.getdbt.com/docs/configure-your-profile
+
+One more thing:
+
+Need help? Don't hesitate to reach out to us via GitHub issues or on Slack:
+
+  https://community.getdbt.com/
+
+Happy modeling!
+
+[0m15:24:36.905144 [info ] [MainThread]: Setting up your profile.
+[0m15:29:01.751466 [info ] [MainThread]: Profile custom_postgres written to C:\Users\sanak\.dbt\profiles.yml using target's profile_template.yml and your supplied values. Run 'dbt debug' to validate the connection.
+[0m15:29:01.752958 [debug] [MainThread]: Command `dbt init` succeeded at 15:29:01.752784 after 306.53 seconds
+[0m15:29:01.753346 [debug] [MainThread]: Flushing usage events
