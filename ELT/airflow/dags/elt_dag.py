@@ -1,10 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from airflow import DAG
 from docker.types import Mount
-
-from airflow.operators.python_operator import PythonOperator
-from airflow.operators.bash import BashOperator
-
+from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 import subprocess
 
@@ -17,7 +14,7 @@ default_args = {
 
 
 def run_elt_script():
-    script_path = "/opt/airflow/elt_script/elt_script.py"
+    script_path = "/opt/airflow/elt/elt_script.py"
     result = subprocess.run(["python", script_path],
                             capture_output=True, text=True)
     if result.returncode != 0:
@@ -45,19 +42,16 @@ t2 = DockerOperator(
     image='ghcr.io/dbt-labs/dbt-postgres:1.4.7',
     command=[
         "run",
-        "--profiles-dir",
-        "/root",
-        "--project-dir",
-        "/dbt",
+        "--profiles-dir", "/root",
+        "--project-dir", "/dbt",
         "--full-refresh"
     ],
-    auto_remove=True,
-    docker_url="unix://var/run/docker.sock",
-    network_mode="bridge",
+    auto_remove=True,           # ✅ в 2.10.x снова булево значение
+    docker_url="unix:///var/run/docker.sock",
+    network_mode="bridge",      # ✅ в 2.10.x используй bridge
     mounts=[
-        Mount(source='/Users/justinchau/Development/data-engineering-db/postgres_transformations',
-              target='/dbt', type='bind'),
-        Mount(source='/Users/justinchau/.dbt', target='/root', type='bind'),
+        Mount(source='/opt/dbt', target='/dbt', type='bind'),
+        Mount(source='C:/Users/sanak/.dbt', target='/root', type='bind'),
     ],
     dag=dag
 )
