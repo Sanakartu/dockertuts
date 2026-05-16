@@ -27,7 +27,8 @@ dag = DAG(
     'elt_and_dbt',
     default_args=default_args,
     description='An ELT workflow with dbt',
-    start_date=datetime(2026, 1, 4),
+    start_date=datetime(2024, 1, 4),  # changed from 2026
+    schedule_interval='@daily',        # add a schedule
     catchup=False,
 )
 
@@ -46,12 +47,12 @@ t2 = DockerOperator(
         "--project-dir", "/dbt",
         "--full-refresh"
     ],
-    auto_remove=True,           # ✅ в 2.10.x снова булево значение
+    auto_remove=True,
     docker_url="unix:///var/run/docker.sock",
-    network_mode="bridge",      # ✅ в 2.10.x используй bridge
+    network_mode="elt_elt_network",  # compose network name: <folder>_<network>
     mounts=[
         Mount(source='/opt/dbt', target='/dbt', type='bind'),
-        Mount(source='C:/Users/sanak/.dbt', target='/root', type='bind'),
+        Mount(source='/root/.dbt', target='/root', type='bind'),  # fixed path
     ],
     dag=dag
 )
