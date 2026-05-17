@@ -1,8 +1,7 @@
-FROM apache/airflow:2.10.5-python3.11
+FROM --platform=linux/amd64 apache/airflow:2.10.5
 
-RUN pip install --upgrade pip setuptools wheel && \
-    pip cache purge
+USER root
+RUN apt-get update && apt-get install -y postgresql-client && apt-get clean
 
-RUN pip install apache-airflow-providers-docker==3.14.0 && \
-    pip install psycopg2-binary && \
-    pip install docker
+USER airflow
+RUN pip install apache-airflow-providers-docker==3.14.0 psycopg2-binary

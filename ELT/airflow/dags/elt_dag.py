@@ -1,9 +1,13 @@
 from datetime import datetime
+import os
 from airflow import DAG
 from docker.types import Mount
 from airflow.operators.python import PythonOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 import subprocess
+
+dbt_project_path = os.environ.get("DBT_HOST_PATH")
+dbt_profiles_path = os.environ.get("DBT_PROFILES_HOST_PATH")
 
 default_args = {
     'owner': 'airflow',
@@ -27,7 +31,8 @@ dag = DAG(
     'elt_and_dbt',
     default_args=default_args,
     description='An ELT workflow with dbt',
-    start_date=datetime(2026, 1, 4),
+    start_date=datetime(2024, 1, 4),
+    schedule_interval='@daily',
     catchup=False,
 )
 
@@ -46,12 +51,13 @@ t2 = DockerOperator(
         "--project-dir", "/dbt",
         "--full-refresh"
     ],
-    auto_remove=True,           # ✅ в 2.10.x снова булево значение
+    auto_remove=True,
+    mount_tmp_dir=False,
     docker_url="unix:///var/run/docker.sock",
-    network_mode="bridge",      # ✅ в 2.10.x используй bridge
+    network_mode="elt_elt_network",
     mounts=[
-        Mount(source='/opt/dbt', target='/dbt', type='bind'),
-        Mount(source='C:/Users/sanak/.dbt', target='/root', type='bind'),
+        Mount(source=dbt_project_path, target="/dbt", type="bind"),
+        Mount(source=dbt_profiles_path, target="/root", type="bind"),   # уже смонтировано compose
     ],
     dag=dag
 )
