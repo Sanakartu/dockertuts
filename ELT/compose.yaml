@@ -2,7 +2,7 @@
 
 services:
   source_postgres:
-    image: postgres:latest
+    image: postgres:17
     ports:
       - "5433:5432"
     networks:
@@ -15,7 +15,7 @@ services:
       - ./source_db_init/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   destination_postgres:
-    image: postgres:latest
+    image: postgres:17
     ports:
       - "5434:5432"
     networks:
@@ -26,24 +26,31 @@ services:
       POSTGRES_PASSWORD: secret
 
   postgres:
-    image: postgres:latest
+    image: postgres:17
     networks:
       - elt_network
     environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
       - POSTGRES_DB=airflow
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "airflow"]
+      interval: 5s
+      retries: 5
 
   init-airflow:
-    image: apache/airflow:2.10.5
+    image: apache/airflow:2.11.0
+    platform: linux/amd64
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     networks:
       - elt_network
     environment:
       - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__FERNET_KEY=plIipb9RU3-3wJ1UNaAtqVNJrqFEks1-dGbJM34EW7U=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
       - AIRFLOW__API__SECRET_KEY=secret
     command: >
       bash -c "airflow db migrate && 
@@ -55,7 +62,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -67,14 +74,18 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./elt:/opt/airflow/elt
       - ./custom_postgres:/opt/dbt
-      - C:/Users/sanak/.dbt:/root/.dbt
-      - //var/run/docker.sock:/var/run/docker.sock
+      - ~/.dbt:/root/.dbt
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor        # ✅ исправлено
+      - PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - DBT_HOST_PATH=${DBT_HOST_PATH}
+      - DBT_PROFILES_HOST_PATH=${DBT_PROFILES_HOST_PATH}
       - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW_CONN_DESTINATION_POSTGRES=postgres://postgres:secret@destination_postgres:5432/destination_db
       - AIRFLOW__CORE__FERNET_KEY=plIipb9RU3-3wJ1UNaAtqVNJrqFEks1-dGbJM34EW7U=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
       - AIRFLOW__API__SECRET_KEY=secret
     ports:
       - "8080:8080"
@@ -84,7 +95,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -96,16 +107,20 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./elt:/opt/airflow/elt
       - ./custom_postgres:/opt/dbt
-      - C:/Users/sanak/.dbt:/root/.dbt
-      - //var/run/docker.sock:/var/run/docker.sock
+      - ~/.dbt:/root/.dbt
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
       - AIRFLOW__CORE__INTERNAL_API_URL=http://localhost:8793
       - AIRFLOW__LOGGING__WORKER_LOG_SERVER_HOST=0.0.0.0
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor        # ✅ исправлено
+      - DBT_HOST_PATH=${DBT_HOST_PATH}
+      - DBT_PROFILES_HOST_PATH=${DBT_PROFILES_HOST_PATH}
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW_CONN_DESTINATION_POSTGRES=postgres://postgres:secret@destination_postgres:5432/destination_db
       - AIRFLOW__CORE__FERNET_KEY=plIipb9RU3-3wJ1UNaAtqVNJrqFEks1-dGbJM34EW7U=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
       - AIRFLOW__API__SECRET_KEY=secret
     command: scheduler
 
@@ -113,7 +128,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -125,14 +140,18 @@ services:
       - ./airflow/dags:/opt/airflow/dags
       - ./elt:/opt/airflow/elt
       - ./custom_postgres:/opt/dbt
-      - C:/Users/sanak/.dbt:/root/.dbt
-      - //var/run/docker.sock:/var/run/docker.sock
+      - ~/.dbt:/root/.dbt
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor        # ✅ исправлено
+      - PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
+      - DBT_HOST_PATH=${DBT_HOST_PATH}
+      - DBT_PROFILES_HOST_PATH=${DBT_PROFILES_HOST_PATH}
       - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW_CONN_DESTINATION_POSTGRES=postgres://postgres:secret@destination_postgres:5432/destination_db
       - AIRFLOW__CORE__FERNET_KEY=plIipb9RU3-3wJ1UNaAtqVNJrqFEks1-dGbJM34EW7U=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
       - AIRFLOW__API__SECRET_KEY=secret
     command: dag-processor
 
@@ -140,16 +159,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
     networks:
       - elt_network
     environment:
-      - AIRFLOW__CORE__EXECUTOR=LocalExecutor        # ✅ исправлено
+      - PATH=/home/airflow/.local/bin:/usr/local/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin
+      - AIRFLOW__CORE__EXECUTOR=LocalExecutor
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres/airflow
       - AIRFLOW__CORE__FERNET_KEY=plIipb9RU3-3wJ1UNaAtqVNJrqFEks1-dGbJM34EW7U=
+      - AIRFLOW__WEBSERVER__SECRET_KEY=secret
       - AIRFLOW__API__SECRET_KEY=secret
       - AIRFLOW__CORE__AUTH_MANAGER=airflow.providers.fab.auth_manager.fab_auth_manager.FabAuthManager
     command: triggerer
@@ -191,3 +212,5 @@ networks:
   #   environment:
   #     DBT_PROFILE: custom_postgres
   #     DBT_TARGET: dev
+
+
