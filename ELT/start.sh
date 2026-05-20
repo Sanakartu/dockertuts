@@ -1,7 +1,15 @@
+docker compose up init airflow
 
+sleep 5
 
+docker compose up -d
 
-cron &
+sleep 5
 
+cd airbite
 
-python /app/elt_script.py
+if [ -f "compose.yaml" ]; then
+    docker compose up -d
+else
+    ./run-ab-platform.sh
+fi                              

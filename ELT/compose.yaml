@@ -62,7 +62,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -94,7 +94,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -126,7 +126,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -156,7 +156,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    user: root
+    
     depends_on:
       init-airflow:
         condition: service_completed_successfully
@@ -208,6 +208,5 @@ networks:
   #   environment:
   #     DBT_PROFILE: custom_postgres
   #     DBT_TARGET: dev
-
 
 
