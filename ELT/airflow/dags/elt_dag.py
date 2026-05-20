@@ -1,9 +1,17 @@
 from datetime import datetime
+import os
 from airflow import DAG
 from docker.types import Mount
-from airflow.operators.python import PythonOperator
+from airflow.utils.dates import days_ago
+from airflow.providers.airbyte.operators.airbyte import AirbyteTriggerSyncOperator
 from airflow.providers.docker.operators.docker import DockerOperator
 import subprocess
+
+CONN_ID = '4145a049-ed35-4cfd-a792-187fcd1a9b07'
+
+
+dbt_project_path = os.environ.get("DBT_HOST_PATH")
+dbt_profiles_path = os.environ.get("DBT_PROFILES_HOST_PATH")
 
 default_args = {
     'owner': 'airflow',
@@ -13,27 +21,24 @@ default_args = {
 }
 
 
-def run_elt_script():
-    script_path = "/opt/airflow/elt/elt_script.py"
-    result = subprocess.run(["python", script_path],
-                            capture_output=True, text=True)
-    if result.returncode != 0:
-        raise Exception(f"Script failed with error: {result.stderr}")
-    else:
-        print(result.stdout)
+
 
 
 dag = DAG(
     'elt_and_dbt',
     default_args=default_args,
     description='An ELT workflow with dbt',
-    start_date=datetime(2026, 1, 4),
+    start_date=datetime(2024, 1, 4),
+    schedule_interval='@daily',
     catchup=False,
 )
 
-t1 = PythonOperator(
-    task_id='run_elt_script',
-    python_callable=run_elt_script,
+t1 = AirbyteTriggerSyncOperator(
+    task_id='airbyte_postgres_postgres',
+    airbyte_conn_id='airbyte',
+    connection_id=CONN_ID,
+    asynchronous=False,
+    timeout=3,
     dag=dag,
 )
 
@@ -46,12 +51,13 @@ t2 = DockerOperator(
         "--project-dir", "/dbt",
         "--full-refresh"
     ],
-    auto_remove=True,           # ✅ в 2.10.x снова булево значение
+    auto_remove=True,
+    mount_tmp_dir=False,
     docker_url="unix:///var/run/docker.sock",
-    network_mode="bridge",      # ✅ в 2.10.x используй bridge
+    network_mode="elt_elt_network",
     mounts=[
-        Mount(source='/opt/dbt', target='/dbt', type='bind'),
-        Mount(source='C:/Users/sanak/.dbt', target='/root', type='bind'),
+        Mount(source=dbt_project_path, target="/dbt", type="bind"),
+        Mount(source=dbt_profiles_path, target="/root", type="bind"),   # уже смонтировано compose
     ],
     dag=dag
 )
